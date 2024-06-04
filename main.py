@@ -1,0 +1,1 @@
+from word.utils import get_all_available_words
