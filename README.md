@@ -1,8 +1,8 @@
-# keyboard
+# word
 
-Custom Keyboard Library implemented with pynput
+Fun Word Library
 
-Library Name: kbd
+Library Name: word
 
 ## Functions
 
