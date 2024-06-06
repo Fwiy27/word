@@ -20,11 +20,11 @@ class Word:
         if output:
             print('Reset Letters Used')
     
-    def get_word(self, syllable: str) -> str:
-        return get_random_available_word(syllable, self.words)
+    def get_word(self, syllable: str, max_length = -1, min_length = 0) -> str:
+        return get_random_available_word(syllable, self.words, max_length, min_length)
     
-    def get_best_word(self, syllable: str) -> str:
-        return get_best_word(syllable, self.words, self.letters_not_used)
+    def get_best_word(self, syllable: str, max_length = -1, min_length = 0) -> str:
+        return get_best_word(syllable, self.words, self.letters_not_used, max_length, min_length)
     
     def choose_word(self, word: str) -> None:
         self.words.remove(word)
