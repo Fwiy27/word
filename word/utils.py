@@ -38,6 +38,8 @@ def get_all_available_words(syllable: str, word_list: list[str], max_length: int
     
     if check_length and len(available) == 0:
         available = get_all_available_words(syllable, word_list)
+    elif len(available) == 0:
+        available = ['404']
     
     return available
                 
