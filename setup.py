@@ -10,6 +10,6 @@ setup(
     maintainer = 'Landon Migawa',
     maintainer_email = 'landonmigawa27@gmail.com',
     packages = find_packages(include = ['word']),
-    install_requires = ['numpy'],
+    package_data={'word': ['*.txt']},
     python_requires = ">=3.7"
 )

@@ -3,6 +3,6 @@ build:
 	source venv/bin/activate && \
 		pip install -U wheel setuptools && \
 		python -m setup bdist_wheel && \
-		rm -rf kbd.egg-info && \
+		rm -rf word.egg-info && \
 		rm -rf build && \
 		rm -rf venv

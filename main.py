@@ -1,1 +1,5 @@
-from word.utils import get_all_available_words
+import word
+
+w = word.Word()
+
+print(w.get_word('ssl'))

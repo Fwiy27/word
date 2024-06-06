@@ -1,4 +1,4 @@
-# word
+# keyboard
 
 Fun Word Library
 
@@ -6,14 +6,17 @@ Library Name: word
 
 ## Functions
 
-| function         | description                                                                                         | args                                                                                  |
-| ---------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `hotkey()`       | Initializes a hotkey                                                                                | key[`Key`], callback[`callable`], message[`str`], output[`bool`]                      |
-| `once()`         | Initializes a one time use hotkey                                                                   | key[`Key`], callback[`callable`], message[`str`], init_output[`bool`], output[`bool`] |
-| `toggle()`       | Initializes a hotkey that runs callback continuously with break of {sleep_time} between invocations | key[`Key`], callback[`callable`], message[`str`], output[`bool`], sleep_time[`int`]   |
-| `wait()`         | Initializes listener to wait for key before activating function and moving on                       | until[`Key`], callback[`callable`], output[`bool`]                                    |
-| `send()`         | Simulates keyboard sending key                                                                      | until[`Key`]                                                                          |
-| `type_content()` | Simulates keyboard typing word at wpm                                                               | content[`str`], wpm[`int`], errors[`bool`], error_percentage[`int`]                   |
+```
+w = word.Word(words_file_location: str)
+```
+
+| function (with word object) | description                                           | args            |
+| --------------------------- | ----------------------------------------------------- | --------------- |
+| `reset_words()`             | Reset Words Used                                      | `None`          |
+| `reset_letters()`           | Resets Letters Used                                   | `None`          |
+| `get_word()`                | Returns random word with syllable in it               | syllable[`str`] |
+| `get_best_word()`           | Returns word that uses most letters not already used  | syllable[`str`] |
+| `choose_word()`             | Removes word from words list and updates letters used | word[`str]      |
 
 ## Build
 
@@ -46,12 +49,12 @@ python -m setup bdist_wheel
 5. Remove unnecessary files
 
 ```
-rm -rf kbd.egg-info;rm -rf build;
+rm -rf word.egg-info;rm -rf build;
 ```
 
 6. Use wheel
 
-- Built Wheel will be in dist/kbd\*.whl
+- Built Wheel will be in dist/word\*.whl
 
 ### Makefile
 
@@ -63,4 +66,4 @@ make build
 
 2. Use wheel
 
-- Built Wheel will be in dist/kbd\*.whl
+- Built Wheel will be in dist/word\*.whl
