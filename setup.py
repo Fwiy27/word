@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'word',
-    version = '1.0.2',
+    version = '1.0.3',
     description = "Fun Word Finder",
     long_description = open('README.md').read(),
     author = 'Landon Migawa',
