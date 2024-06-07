@@ -16,6 +16,7 @@ w = word.Word(words_file_location: str)
 | `reset_letters()`           | Resets Letters Used                                   | `None`          |
 | `get_word()`                | Returns random word with syllable in it               | syllable[`str`] |
 | `get_best_word()`           | Returns word that uses most letters not already used  | syllable[`str`] |
+| `get_longest_word()`        | Gets longest word from words list used                | syllable[`str]  |
 | `choose_word()`             | Removes word from words list and updates letters used | word[`str]      |
 
 ## Build

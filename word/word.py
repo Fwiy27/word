@@ -21,7 +21,7 @@ class Word:
         Args:
             output (bool, optional): Prints to stdout that words have been reset. Defaults to True.
         """
-        self.words = open(self._words_file_location).read().split()
+        self.words: set = set([word.lower() for word in open(self._words_file_location).read().split()])
         print('Reset Word') if output else None
     
     def reset_letters(self, output = True) -> None:
