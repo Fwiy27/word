@@ -27,7 +27,7 @@ def get_all_available_words(syllable: str, word_list: set, max_length: int = 0, 
         set: List of available words
     """
     check_max, check_min = max_length > 0, min_length > 0
-    available = set([word for word in word_list if syllable in word and (not check_min or len(word) >= min_length) and (not check_max or len(word) <= max_length)])
+    available = [word for word in word_list if syllable in word and (not check_min or len(word) >= min_length) and (not check_max or len(word) <= max_length)]
     return available if len(available) > 0 or not (check_min or check_max) or not fallback else get_all_available_words(syllable, word_list)
 
 def weigh_words(available_words: set[str], letters_not_used: list[str]) -> dict[str, int]:
@@ -66,7 +66,7 @@ def get_best_word(syllable: str, word_list: set[str], letters_not_used: list[str
     Returns:
         str: Best word based on letters not used
     """
-    return get_max_word(weigh_words(get_all_available_words(syllable, word_list, max_length, min_length), letters_not_used))
+    return get_max_word(weigh_words(set(get_all_available_words(syllable, word_list, max_length, min_length)), letters_not_used))
 
 def get_random_available_word(syllable: str, word_list: set[str], max_length: int = 0, min_length: int = 0) -> str:
     """Get random word given syllable
@@ -92,5 +92,5 @@ def get_longest_word(syllable: str, word_list: set[str]) -> str:
     Returns:
         str: Longest word given syllable
     """
-    available_words: set[str] = get_all_available_words(syllable, word_list)
+    available_words: set[str] = set(get_all_available_words(syllable, word_list))
     return max(available_words, key = lambda word: len(word))
