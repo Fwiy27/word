@@ -13,67 +13,108 @@ def substring_in_string(substring: str, full_string: str) -> bool:
     return substring.lower() in full_string.lower()
 
 def string_in_list(search_string: str, search_list: list) -> bool:
+    """Return True if string is found in list ignores capitalization
+
+    Args:
+        search_string (str): String to look for
+        search_list (list): List to search through
+
+    Returns:
+        bool: String found in list
+    """
     return True if search_string.lower() in [word.lower() for word in search_list] else False
 
-def get_all_available_words(syllable: str, word_list: list[str], max_length: int = -1, min_length: int = 0) -> list[str]:
-    """Get all words that have syllable in them
+def get_weight(word: str, letters_not_used: list[str]) -> int:
+    """Get weight for word based on letters not used
+
+    Args:
+        word (str): Word to get weight for
+        letters_not_used (list[str]): List of letters not used
+
+    Returns:
+        int: Weight based on letters not used
+    """
+    checked_letters: set = set()
+    return sum(1 for letter in word if string_in_list(letter, letters_not_used) and (letter not in checked_letters and not checked_letters.add(letter)))
+
+def get_all_available_words(syllable: str, word_list: list[str], max_length: int = 0, min_length: int = 0, fallback = True) -> list[str]:
+    """Returns all available words and optionally checks for length
 
     Args:
         syllable (str): Syllable to search for
-        word_list (list[str]): Words to search through
-        max_length (int, optional): Maximum word length. Defaults to -1.
-        min_length (int, optional): Minimum word length. Defaults to 0.
+        word_list (list[str]): Words list to search through
+        max_length (int, optional): Maximum length of word. Defaults to 0.
+        min_length (int, optional): Minimum length of word. Defaults to 0.
+        fallback (bool, optional): Discards word length requirements if none found. Defaults to True.
 
     Returns:
-        list[str]: List of all words that have syllable in them
+        list[str]: List of available words
     """
-    check_length: bool = False if max_length == -1 else True
-    
-    available: list[str] = []
-    
-    for word in word_list:
-        if substring_in_string(syllable, word):
-            if not check_length or min_length <= len(word) <= max_length:
-                available.append(word)
-    
-    if check_length and len(available) == 0:
-        available = get_all_available_words(syllable, word_list)
-    elif len(available) == 0:
-        available = ['404']
-    
-    return available
-                
-def get_random_available_word(syllable: str, word_list: list[str], max_length: int = -1, min_length: int = 0) -> str:
-    """Get random word that has syllable in it
+    check_max, check_min = max_length > 0, min_length > 0
+    available = [word for word in word_list if substring_in_string(syllable, word) and (not check_min or len(word) >= min_length) and (not check_max or len(word) <= max_length)]
+    return available if len(available) > 0 or not (check_min or check_max) or not fallback else get_all_available_words(syllable, word_list)
+
+def weigh_words(available_words: list[str], letters_not_used: list[str]) -> dict[str, int]:
+    """Returns dictionary of words and their weights based on letters not used
 
     Args:
-        syllable (str): Syllable to search for
-        word_list (list[str]): Words to search through
-        max_length (int, optional): Maximum word length. Defaults to -1.
-        min_length (int, optional): Minimum word length. Defaults to 0.
+        available_words (list[str]): List of available words
+        letters_not_used (list[str]): List of letters not used
 
     Returns:
-        str: Random word with syllable in it
+        dict[str, int]: Dictionary of words and their weights based on letters not used
     """
-    available: list[str] = get_all_available_words(syllable, word_list, max_length, min_length)
-    return random.choice(available)
+    return {word: get_weight(word, letters_not_used) for word in available_words}
+    
+def get_max_word(weighted_words: dict[str, int]) -> str:
+    """Returns word with max weight given weighted words
 
-def weigh_word(available_words: list[str], letters_not_used: list[str]) -> dict[str, int]:
-    weighted_words: dict[str, int] = {}
-    for word in available_words:
-        checked_letters: list[str] = []
-        weighted_words[word] = 0
-        for letter in word:
-            if not string_in_list(letter, checked_letters) and string_in_list(letter, letters_not_used):
-                weighted_words[word] = weighted_words.get(word, 0) + 1
-                checked_letters.append(letter)
-    return weighted_words
+    Args:
+        weighted_words (dict[str, int]): Dictionary of weighted words
 
-def get_max_word(weighted_word: dict[str, int]) -> str:
-    return max(weighted_word, key = lambda word: weighted_word[word])
+    Returns:
+        str: Word with max weight
+    """
+    return max(weighted_words, key = lambda word: weighted_words[word])
 
 def get_best_word(syllable: str, word_list: list[str], letters_not_used: list[str], max_length: int = -1, min_length: int = 0) -> str:
-    available_words: list[str] = get_all_available_words(syllable, word_list, max_length, min_length)
-    weighted_words: dict[str, int] = weigh_word(available_words, letters_not_used)
-    word = get_max_word(weighted_words)
-    return word
+    """Gets best word based on letters not used
+
+    Args:
+        syllable (str): Syllable to search for
+        word_list (list[str]): Word list to search through
+        letters_not_used (list[str]): List of letters not used
+        max_length (int, optional): Maximum length of word. Defaults to -1.
+        min_length (int, optional): Minimum length of word. Defaults to 0.
+
+    Returns:
+        str: Best word based on letters not used
+    """
+    return get_max_word(weigh_words(get_all_available_words(syllable, word_list, max_length, min_length), letters_not_used))
+
+def get_random_available_word(syllable: str, word_list: list[str], max_length: int = 0, min_length: int = 0) -> str:
+    """Get random word given syllable
+
+    Args:
+        syllable (str): Syllable to search for
+        word_list (list[str]): List of words to search through
+        max_length (int, optional): Maximum length of word. Defaults to 0.
+        min_length (int, optional): Minimum lenght of word. Defaults to 0.
+
+    Returns:
+        str: Random word given syllable
+    """
+    return random.choice(get_all_available_words(syllable, word_list, max_length, min_length))
+
+def get_longest_word(syllable: str, word_list: list[str]) -> str:
+    """Get longest word given syllable
+
+    Args:
+        syllable (str): Syllable to search for
+        word_list (list[str]): Word list to search through
+
+    Returns:
+        str: Longest word given syllable
+    """
+    available_words: list[str] = get_all_available_words(syllable, word_list)
+    return max(available_words, key = lambda word: len(word))
